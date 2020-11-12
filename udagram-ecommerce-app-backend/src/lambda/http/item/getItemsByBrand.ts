@@ -1,23 +1,24 @@
 import 'source-map-support'
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 
-import { ResponseItemDetailJson } from '../../../models/http/ResponseItemDetailJson';
-import { getItemDetail } from '../../../businessLogic/Item';
+import {ResponseItemBriefJson} from '../../../models/http/ResponseItemBriefJson';
+import {getListOfItemsBrief} from '../../../businessLogic/Item'
 
 export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent):Promise<APIGatewayProxyResult>=>{
-    console.log(`handling getItem event, `, event);
-
-    const itemId = event.pathParameters.itemId
+    console.log(`handling getItemsByBrand event, `, event);
+    const brandId = event.pathParameters.brandId
+    
 
     try{
-        const itemDetailJson:ResponseItemDetailJson = await getItemDetail(itemId);
+        const itemBriefJsons = await getListOfItemsBrief(brandId) as ResponseItemBriefJson[];
+        console.log(`ResponseItemBriefJson: `, itemBriefJsons);
         return {
             statusCode: 200,
             headers:{
                 'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
-                item:itemDetailJson
+                items:itemBriefJsons
             })
         }
     }catch(err){

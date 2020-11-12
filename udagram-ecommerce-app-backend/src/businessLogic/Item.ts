@@ -1,27 +1,49 @@
 import * as uuid from 'uuid';
+import moment from 'moment';
 
 import {CreateItemJson} from '../models/http/CreateItemJson';
+import {CreateItemImageJson} from '../models/http/CreateItemImageJson';
+import {UpdateItemJson} from '../models/http/UpdateItemJson';
 import {ItemDoc} from '../models/doc/ItemDoc';
 import {item} from '../resources/Item';
+import {getBrandById} from './Brand';
 import {ResponseItemBriefJson} from '../models/http/ResponseItemBriefJson';
-import {getImageDocByImageId} from './ItemImage';
+import {ResponseItemImageJson} from '../models/http/ResponseItemImageJson';
+import {ResponseCreateItemJson} from '../models/http/ResponseCreateItemJson';
+import {ResponseItemDetailJson} from '../models/http/ResponseItemDetailJson';
+
+import {getImageDocByImageId,createItemImageDoc,getImageDocsByItemId} from './ItemImage';
+import {getAdminByJWTSub,getBrandIdByAdminId} from './BrandAdmin';
+import {deleteImageByImageId} from './ItemImage';
 
 const StarsReducer = (accumlator, currentDoc) =>  accumlator + parseInt(currentDoc.star);
 
-export async function createItem(createItemJson:CreateItemJson):Promise<ItemDoc>{
+export async function createItem(createItemJson:CreateItemJson):Promise<ResponseCreateItemJson>{
     const itemId = uuid.v4();
+    const createItemImageJson:CreateItemImageJson = {itemId,createDatetime:moment().format()};
+    const itemImageDoc:ResponseItemImageJson = await createItemImageDoc(createItemImageJson);
+    console.log(`In businessLogic/createItem() function after createItemImageDoc():`, itemImageDoc);
     const putItemDoc = {
         ...createItemJson,
         comments:[],
         stars:0,
-        itemId
+        itemId,
+        windowImageId:itemImageDoc.imageId,
     } as ItemDoc;
-    item.create(putItemDoc);
-    return putItemDoc;
+    await item.create(putItemDoc);
+    const responseCreateItemJson:ResponseCreateItemJson ={
+        itemId,
+        itemName:putItemDoc.itemName,
+        introduction:putItemDoc.introduction,
+        brandId:putItemDoc.brandId,
+        price:putItemDoc.price,
+        uploadPhotoUrl:itemImageDoc.uploadUrl,
+    }
+    console.log(`In businessLogic/createItem() function after item.create():`, responseCreateItemJson);
+    return responseCreateItemJson;
 }
 
 export async function uploadWindowPhotoForItem(itemId:string, imageId:string){
-    /** to be worked */
     item.update(itemId, 'windowImageId', imageId)
 }
 
@@ -37,9 +59,32 @@ export async function getItemBrief(itemId:string):Promise<ResponseItemBriefJson>
         itemId:itemId,
         itemName:itemDoc.itemName,
         thumbnailUrl,
-        stars:itemDoc.comments.reduce(StarsReducer, 0)/itemDoc.comments.length,
+        stars: (itemDoc.comments.length===0) ? 0 : itemDoc.comments.reduce(StarsReducer, 0)/itemDoc.comments.length,
         price:itemDoc.price,
     } as ResponseItemBriefJson;
+}
+
+export async function getItemDetail(itemId:string):Promise<ResponseItemDetailJson>{
+    const itemDoc = await item.getByItemId(itemId);
+    const imageDocs = await getImageDocsByItemId(itemId)
+    const iteratingImageJson = await Promise.all(imageDocs.map(async (imageDoc)=>({
+        imageId:imageDoc.imageId,
+        photoUrl:imageDoc.photoUrl,
+        thumbnailUrl:imageDoc.thumbnailUrl,
+    })));
+    const responseItemDetailJson:ResponseItemDetailJson = {
+        itemId:itemDoc.itemId,
+        itemName:itemDoc.itemName,
+        introduction:itemDoc.introduction,
+        stars:(itemDoc.comments.length===0) ? 0 : itemDoc.comments.reduce(StarsReducer, 0)/itemDoc.comments.length,
+        price:itemDoc.price,
+        comments:itemDoc.comments,
+        brandId:itemDoc.brandId,
+        brandName:(await getBrandById(itemDoc.brandId)).brandName,
+        photos:iteratingImageJson
+    };
+
+    return responseItemDetailJson;
 }
 
 export async function getListOfItemsBrief(brandId:string):Promise<ResponseItemBriefJson[]>{
@@ -47,11 +92,30 @@ export async function getListOfItemsBrief(brandId:string):Promise<ResponseItemBr
     const responseItemBriefJsons = await Promise.all(itemDocs.map(async (itemDoc)=>({
             itemId:itemDoc.itemId,
             itemName:itemDoc.itemName,
-            stars:itemDoc.comments.reduce(StarsReducer, 0)/itemDoc.comments.length,
+            stars:(itemDoc.comments.length===0) ? 0 : itemDoc.comments.reduce(StarsReducer, 0)/itemDoc.comments.length,
             price:itemDoc.price,
             thumbnailUrl:(await getImageDocByImageId(itemDoc.windowImageId)).thumbnailUrl,
         })
     ));
     return responseItemBriefJsons as ResponseItemBriefJson[];
+}
 
+export async function getListOfItemsBriefByJWTSub(jwtSub:string):Promise<ResponseItemBriefJson[]>{
+    const adminDoc = await getAdminByJWTSub(jwtSub);
+    const brandId = await getBrandIdByAdminId(adminDoc.adminId);
+    return getListOfItemsBrief(brandId);
+}
+
+export async function deleteItemDoc(itemId:string){
+    await item.delete(itemId);
+}
+
+export async function updateItemDoc(updateItemJson:UpdateItemJson):Promise<ResponseItemDetailJson>{
+    await item.patchItem(updateItemJson);
+    return await getItemDetail(updateItemJson.itemId);
+}
+
+export async function updateItemWindowImage(itemId:string, windowImageId:string){
+    await item.patchItemWindowImageId(itemId, windowImageId);
+    await deleteImageByImageId(windowImageId);
 }

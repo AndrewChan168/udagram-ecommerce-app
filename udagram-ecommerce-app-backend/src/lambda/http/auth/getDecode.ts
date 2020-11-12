@@ -1,23 +1,26 @@
 import 'source-map-support'
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 
-import { ResponseItemDetailJson } from '../../../models/http/ResponseItemDetailJson';
-import { getItemDetail } from '../../../businessLogic/Item';
+import { decodeToken, getToken, getJwks } from '../../../businessLogic/Auth'
 
 export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent):Promise<APIGatewayProxyResult>=>{
-    console.log(`handling getItem event, `, event);
+    console.log(`handling getDecode event, `, event);
 
-    const itemId = event.pathParameters.itemId
+    const accessToken =  getToken(event.headers.Authorization);
+    console.log(`access-token, `, accessToken);
 
     try{
-        const itemDetailJson:ResponseItemDetailJson = await getItemDetail(itemId);
+        const jwks = await getJwks();
+        console.log('JWKS, ', jwks)
+        const decodedToken = decodeToken(accessToken, jwks);
+        console.log(`decoded token, `, decodedToken);
         return {
             statusCode: 200,
             headers:{
                 'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
-                item:itemDetailJson
+                payload: decodedToken
             })
         }
     }catch(err){

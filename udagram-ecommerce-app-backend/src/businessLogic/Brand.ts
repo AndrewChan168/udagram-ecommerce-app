@@ -3,6 +3,7 @@ import * as uuid from 'uuid';
 import {brand} from '../resources/Brand';
 import {BrandDoc} from '../models/doc/BrandDoc';
 import {CreateBrandJson} from '../models/http/CreateBrandJson';
+import {getBrandIdByAdminId} from './BrandAdmin';
 
 export async function createBrand(createBrandJson:CreateBrandJson):Promise<BrandDoc>{
     const brandId = uuid.v4()
@@ -27,4 +28,10 @@ export async function getAllBrands():Promise<BrandDoc[]>{
 
 export async function updateBrand(brandDoc:BrandDoc):Promise<BrandDoc>{
     return await brand.update(brandDoc);
+}
+
+export async function getBrandByAdminId(adminId:string):Promise<BrandDoc>{
+    const brandId = await getBrandIdByAdminId(adminId);
+    const brandDoc = await getBrandById(brandId);
+    return brandDoc;
 }
