@@ -7,7 +7,6 @@ import { updateItemWindowImage } from '../../../businessLogic/Item';
 import { CreateItemImageJson } from '../../../models/http/CreateItemImageJson';
 import { createItemImageDoc } from '../../../businessLogic/ItemImage';
 import { ResponseItemImageJson } from '../../../models/http/ResponseItemImageJson';
-import { ResponseItemDetailJson } from '../../../models/http/ResponseItemDetailJson';
 
 export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent):Promise<APIGatewayProxyResult>=>{
     console.log(`handling patchImage event, `, event);

@@ -220,7 +220,7 @@ functions:
     events:
       - http:
           method: post
-          path: item
+          path: itemImage
           cors: true
 
   deleteImage:
@@ -232,12 +232,16 @@ functions:
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEM_IMAGES_TABLE} 
       - Effect: Allow
         Action:
-          - dynamodb:DeleteObject
+          - s3:DeleteObject
         Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
+      - Effect: Allow
+        Action:
+          - s3:DeleteObject
+        Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
     events:
       - http:
-          method: post
-          path: item
+          method: delete
+          path: itemImage/{imageId}
           cors: true
 
   ResizeImage:
@@ -413,14 +417,14 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-          #- IndexName: ${self:provider.environment.BRAND_ID_SORTED_INDEX}
-          #  KeySchema:
-          #    - AttributeName: brandId
-          #      KeyType: HASH
-          #    - AttributeName: latestUpdateDatetime
-          #      KeyType: RANGE
-          #  Projection:
-          #    ProjectionType: ALL
+          - IndexName: ${self:provider.environment.BRAND_ID_SORTED_INDEX}
+            KeySchema:
+              - AttributeName: brandId
+                KeyType: HASH
+              - AttributeName: latestUpdateDatetime
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
 
     InvoicesDynamoDBTable:
       Type: AWS::DynamoDB::Table
@@ -494,7 +498,7 @@ resources:
                 ArnLike:
                   AWS:SourceArn: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}
 
-    AttachmentsBucket:
+    ImagesBucket:
       Type: AWS::S3::Bucket
       DependsOn: SNSTopicPolicy
       Properties:
@@ -537,16 +541,34 @@ resources:
                 - HEAD
               MaxAge: 3000
 
-    BucketPolicy:
+    ImageBucketBucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
         PolicyDocument:
-          Id: MyPolicy
+          #Id: MyPolicy
+          Id: MyImageBucketPolicy
           Version: "2012-10-17"
           Statement:
-            - Sid: PublicReadForGetBucketObjects
+            #- Sid: PublicReadForGetBucketObjects
+            - Sid: PublicReadForGetImageBucketObjects
               Effect: Allow
               Principal: '*'
               Action: 's3:GetObject'
               Resource: 'arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*'
-        Bucket: !Ref AttachmentsBucket
+        Bucket: !Ref ImagesBucket
+
+    ThumbnailBucketBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        PolicyDocument:
+          #Id: MyPolicy
+          Id: MyThumbnailPolicy
+          Version: "2012-10-17"
+          Statement:
+            #- Sid: PublicReadForGetBucketObjects
+            - Sid: PublicReadForGetThumbnailBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:GetObject'
+              Resource: 'arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*'
+        Bucket: !Ref ThumbnailsBucket

@@ -37,9 +37,9 @@ class ItemImage{
     }
 
     async delete(imageId:string){
-        this.deleteImage(imageId);
-        this.deleteThumbnail(imageId);
-        this.deleteDoc(imageId);
+        await this.deleteImage(imageId);
+        await this.deleteThumbnail(imageId);
+        await this.deleteDoc(imageId);
     }
 
     private async deleteImage(imageId:string){
@@ -107,7 +107,6 @@ class ItemImage{
     }
 
     async createResizedImage(imageId:string, imageBuffer:Buffer){
-        console.log('Inside ItemImage.createResizedImage() method')
         try{
             await this.s3.putObject({
                 Bucket:this.thumbnailBucketName,

@@ -5,7 +5,7 @@ import { deleteImageByImageId } from '../../../businessLogic/ItemImage';
 
 export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent):Promise<APIGatewayProxyResult>=>{
     console.log(`handling deleteImage event, `, event);
-    const imageId = event.pathParameters.imageId
+    const imageId = event.pathParameters.imageId;
 
     try{
         await deleteImageByImageId(imageId);
