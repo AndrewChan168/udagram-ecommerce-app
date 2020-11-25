@@ -28,15 +28,10 @@ class BrandAdmin{
         console.log(`In resource/BrandAdmin.getByJWTSub() after docClient.get(), BrandAdminDoc:`, result.Item);
         return result.Item as BrandAdminDoc;
     }
-
+/*
     async getByAdminId(adminId:string):Promise<BrandAdminDoc>{
         console.log(`In resource/BrandAdmin.getByAdminId(), adminId:`, adminId);
-        /*
-        const result = await this.docClient.get({
-            TableName: this.tableName,
-            Key:{adminId},
-        }).promise();
-        */
+
        const result = await this.docClient.query({
         TableName:this.tableName,
         IndexName:this.brandAdminIdIndex,
@@ -47,6 +42,19 @@ class BrandAdmin{
        }).promise();
         console.log(`In resource/BrandAdmin.getByAdminId() after docClient.query(), BrandAdminDoc[]:`, result.Items);
         return result.Items[0] as BrandAdminDoc;
+    }
+*/
+    async getByAdminId(adminId:string):Promise<BrandAdminDoc[]>{
+        const result = await this.docClient.query({
+            TableName:this.tableName,
+            IndexName:this.brandAdminIdIndex,
+            KeyConditionExpression:"adminId=:adminId",
+            ExpressionAttributeValues:{
+                ':adminId':adminId
+            }
+           }).promise();
+
+           return result.Items as BrandAdminDoc[];
     }
 
     async getAdminsByBrandId(brandId:string):Promise<BrandAdminDoc[]>{

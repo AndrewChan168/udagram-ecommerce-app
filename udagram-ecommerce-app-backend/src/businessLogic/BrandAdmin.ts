@@ -28,7 +28,14 @@ export async function getAdminByJWTSub(jwtSub:string):Promise<BrandAdminDoc>{
     return await brandAdmin.getByJWTSub(jwtSub)
 }
 
+/*
 export async function getBrandIdByAdminId(adminId:string):Promise<string>{
     const adminDoc:BrandAdminDoc = await brandAdmin.getByAdminId(adminId);
     return adminDoc.brandId;
+}
+*/
+
+export async function getBrandIdByAdminId(adminId:string):Promise<string[]>{
+    const adminDocs:BrandAdminDoc[] = await brandAdmin.getByAdminId(adminId);
+    return adminDocs.map(adminDoc=>(adminDoc.brandId));
 }

@@ -37,7 +37,7 @@ export async function deleteImageByImageId(imageId:string){
 
 export async function createThumbnail(imageId:string){
     const image:Jimp = await itemImage.getImage(imageId);
-    image.resize(150, Jimp.AUTO);
+    image.resize(50, Jimp.AUTO);
     const convertedBuffer = await image.getBufferAsync(Jimp.AUTO);
     await itemImage.createResizedImage(imageId, convertedBuffer);
 }

@@ -5,3 +5,13 @@ export interface ResponseItemBriefJson{
     stars:number,
     price:number,
 }
+
+
+
+export interface ResponseItemBriefJsons{
+    brand:{
+        brandId: string,
+        brandName: string,
+    },
+    items:ResponseItemBriefJson[]
+}

@@ -19,14 +19,16 @@ export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent)
 
     try{
         const adminId:string = (await getAdminByJWTSub(jwtSub)).adminId;
-        const brand:BrandDoc = await getBrandByAdminId(adminId);
+        console.log(`getback adminId: `, adminId);
+        const brands:BrandDoc[] = await getBrandByAdminId(adminId);
+        console.log(`getback brandDocs: `, brands);
         return {
             statusCode: 200,
             headers:{
                 'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
-                brand
+                brands
             })
         }
     }catch(err){

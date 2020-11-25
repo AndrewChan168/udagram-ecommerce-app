@@ -2,7 +2,7 @@ import 'source-map-support'
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 
 import { getListOfItemsBriefByJWTSub } from '../../../businessLogic/Item';
-import { ResponseItemBriefJson } from '../../../models/http/ResponseItemBriefJson';
+import { ResponseItemBriefJsons } from '../../../models/http/ResponseItemBriefJson';
 import { getSubject } from '../../../businessLogic/Auth'
 
 export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent):Promise<APIGatewayProxyResult>=>{
@@ -15,15 +15,13 @@ export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent)
     console.log(`sub of decoded payload: ${jwtSub}`);
 
     try{
-        const itemBriefJsons = await getListOfItemsBriefByJWTSub(jwtSub) as ResponseItemBriefJson[];
+        const itemBriefJsons = await getListOfItemsBriefByJWTSub(jwtSub) as ResponseItemBriefJsons[];
         return {
             statusCode: 200,
             headers:{
                 'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify({
-                items:itemBriefJsons
-            })
+            body: JSON.stringify(itemBriefJsons)
         }
     }catch(err){
         return {
