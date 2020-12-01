@@ -2,8 +2,6 @@ export interface CartItemDoc {
     itemId:string,
     itemName:string,
     qty:number,
-    unitPrice?:number,
-    totalPrice?:number,
 }
 
 export interface MemberDoc {

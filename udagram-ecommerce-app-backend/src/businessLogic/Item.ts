@@ -6,14 +6,14 @@ import {CreateItemImageJson} from '../models/http/CreateItemImageJson';
 import {UpdateItemJson} from '../models/http/UpdateItemJson';
 import {ItemDoc} from '../models/doc/ItemDoc';
 import {item} from '../resources/Item';
-import {getBrandById} from './Brand';
+import {getBrandById, getBrandByAdminId} from './Brand';
 import {ResponseItemBriefJson,ResponseItemBriefJsons} from '../models/http/ResponseItemBriefJson';
 import {ResponseItemImageJson} from '../models/http/ResponseItemImageJson';
 import {ResponseCreateItemJson} from '../models/http/ResponseCreateItemJson';
 import {ResponseItemDetailJson} from '../models/http/ResponseItemDetailJson';
 
 import {getImageDocByImageId,createItemImageDoc,getImageDocsByItemId} from './ItemImage';
-import {getAdminByJWTSub,getBrandIdByAdminId} from './BrandAdmin';
+import {getAdminByJWTSub} from './Admin';
 import {deleteImageByImageId} from './ItemImage';
 
 
@@ -101,20 +101,13 @@ export async function getListOfItemsBrief(brandId:string):Promise<ResponseItemBr
     return responseItemBriefJsons as ResponseItemBriefJson[];
 }
 
-/*
-export async function getListOfItemsBriefByJWTSub(jwtSub:string):Promise<ResponseItemBriefJson[]>{
-    const adminDoc = await getAdminByJWTSub(jwtSub);
-    const brandId = await getBrandIdByAdminId(adminDoc.adminId);
-    return getListOfItemsBrief(brandId);
-}
-*/
 
 export async function getListOfItemsBriefByJWTSub(jwtSub:string):Promise<ResponseItemBriefJsons[]>{
     const adminDoc = await getAdminByJWTSub(jwtSub);
-    const brandIds = await getBrandIdByAdminId(adminDoc.adminId);
-    const itemBriefJsons = await Promise.all(brandIds.map(async (brandId)=>({
-        brand:await getBrandById(brandId),
-        items:await getListOfItemsBrief(brandId)
+    const brandDocs = await getBrandByAdminId(adminDoc.adminId);
+    const itemBriefJsons = await Promise.all(brandDocs.map(async (brandDoc)=>({
+        brand:await getBrandById(brandDoc.brandId),
+        items:await getListOfItemsBrief(brandDoc.brandId)
     }))) 
     
     return itemBriefJsons.map(itemBriefJson=>({
@@ -122,6 +115,7 @@ export async function getListOfItemsBriefByJWTSub(jwtSub:string):Promise<Respons
         items:itemBriefJson.items as ResponseItemBriefJson[]
     })) as ResponseItemBriefJsons[]
 }
+
 
 export async function deleteItemDoc(itemId:string){
     await item.delete(itemId);

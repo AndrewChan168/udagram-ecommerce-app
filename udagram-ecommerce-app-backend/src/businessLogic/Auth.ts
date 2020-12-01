@@ -1,6 +1,8 @@
 import Axios from 'axios';
 import { verify } from 'jsonwebtoken'
 import {JwtPayload} from '../models/doc/JwtDoc';
+import {admin} from './../resources/Admin';
+import {AdminDoc} from './../models/doc/AdminDoc';
 
 interface JWK {
     alg:string,

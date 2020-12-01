@@ -7,8 +7,8 @@ class BrandAdmin{
     constructor(
         private readonly docClient:DocumentClient,
         private readonly tableName:string,
-        private readonly brandAdminIdIndex:string,
         private readonly brandAdminBrandIdIndex:string,
+        private readonly brandAdminAdminIdIndex:string,
     ){}
 
     async create(brandAdmin:BrandAdminDoc){
@@ -47,7 +47,7 @@ class BrandAdmin{
     async getByAdminId(adminId:string):Promise<BrandAdminDoc[]>{
         const result = await this.docClient.query({
             TableName:this.tableName,
-            IndexName:this.brandAdminIdIndex,
+            IndexName:this.brandAdminAdminIdIndex,
             KeyConditionExpression:"adminId=:adminId",
             ExpressionAttributeValues:{
                 ':adminId':adminId
@@ -57,7 +57,7 @@ class BrandAdmin{
            return result.Items as BrandAdminDoc[];
     }
 
-    async getAdminsByBrandId(brandId:string):Promise<BrandAdminDoc[]>{
+    async getByBrandId(brandId:string):Promise<BrandAdminDoc[]>{
         const result = await this.docClient.query({
             TableName:this.tableName,
             IndexName:this.brandAdminBrandIdIndex,
@@ -74,6 +74,6 @@ class BrandAdmin{
 export const brandAdmin = new BrandAdmin(
     new AWS.DynamoDB.DocumentClient(),
     process.env.BRAND_ADMINS_TABLE,
-    process.env.BRAND_ADMIN_ID_INDEX,
     process.env.BRAND_ADMIN_BRAND_ID_INDEX,
+    process.env.BRAND_ADMIN_ADMIN_ID_INDEX,
 );

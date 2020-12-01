@@ -7,7 +7,7 @@ interface InvoiceItemDoc {
 
 export interface InvoiceDoc {
     invoiceId: string,
-    personId:string,
+    memberId:string,
     items:InvoiceItemDoc[],
     totalPrice:number,
 }

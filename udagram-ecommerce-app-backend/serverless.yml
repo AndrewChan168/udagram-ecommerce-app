@@ -27,15 +27,18 @@ provider:
     BRAND_ADMINS_TABLE: Brand-Admins-${self:provider.stage}
     ITEMS_TABLE: Items-${self:provider.stage}
     ITEM_IMAGES_TABLE: ItemImages-${self:provider.stage}
+    ADMINS_TABLE: Admins-${self:provider.stage}
     MEMBERS_TABLE: Members-${self:provider.stage}
     INVOICES_TABLE: Invoices-${self:provider.stage}
     OAUTH_TABLE: Oauth-${self:provider.stage}
+    ADMIN_ID_INDEX: adminIdIndex
     ITEM_ID_INDEX: itemIdIndex
     MEMBER_ID_INDEX: memberIdIndex
     BRAND_ID_INDEX: brandIdIndex
     BRAND_ID_SORTED_INDEX: brandIdSortedIndex
-    BRAND_ADMIN_ID_INDEX: brandAdminIdIndex
+    BRAND_ADMIN_JWTSUB_INDEX: brandAdminJWTSubIndex
     BRAND_ADMIN_BRAND_ID_INDEX: brandAdminBrandIdIndex
+    BRAND_ADMIN_ADMIN_ID_INDEX: brandAdminAdminIdIndex
     OAUTH_ID_INDEX: oauthIdIndex
     INVOICE_ID_INDEX: IndexIdIndex
     INVOICE_STAGE_INDEX: InvoiceStageIndex
@@ -61,17 +64,31 @@ functions:
           path: decode
           cors: true
 
-  postBrandAdmin:
-    handler: src/lambda/http/brandAdmin/postBrandAdmin.handler
+  postAdmin:
+    handler: src/lambda/http/admin/postAdmin.handler
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE} 
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ADMINS_TABLE} 
     events:
       - http:
           method: post
-          path: brandAdmin
+          path: admin
+          cors: true
+
+  getAdmin:
+    handler: src/lambda/http/admin/getAdmin.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ADMINS_TABLE} 
+    events:
+      - http:
+          method: get
+          path: admin
           cors: true
 
   postBrand:
@@ -79,11 +96,41 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ADMINS_TABLE} 
+      - Effect: Allow
+        Action:
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRANDS_TABLE} 
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE} 
     events:
       - http:
           method: post
+          path: brand
+          cors: true
+
+  patchBrand:
+    handler: src/lambda/http/brand/patchBrand.handler 
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ADMINS_TABLE} 
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRANDS_TABLE} 
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE} 
+    events:
+      - http:
+          method: patch
           path: brand
           cors: true
 
@@ -113,6 +160,19 @@ functions:
           path: allBrands
           cors: true
 
+  getBrandsPrByBrID:
+    handler: src/lambda/http/brandAdmin/getBrandAdminByBrandId.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE} 
+    events:
+      - http:
+          method: get
+          path: brandAdminPair/brandId/{brandId}
+          cors: true
+
   getMyBrands:
     handler: src/lambda/http/brand/getBrandsByAdmin.handler
     iamRoleStatements:
@@ -122,12 +182,16 @@ functions:
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE} 
       - Effect: Allow
         Action:
-          - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE}/index/${self:provider.environment.BRAND_ADMIN_ID_INDEX}
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRANDS_TABLE}
       - Effect: Allow
         Action:
           - dynamodb:GetItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRANDS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ADMINS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE}/index/${self:provider.environment.BRAND_ADMIN_ADMIN_ID_INDEX}
     events:
       - http:
           method: get
@@ -135,16 +199,12 @@ functions:
           cors: true
 
   getAllBrAdItems:
-    handler: src/lambda/http/brandAdmin/getItemsByBrandAdmin.handler
+    handler: src/lambda/http/item/getItemsByBrandAdmin.handler
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:GetItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE} 
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE}/index/${self:provider.environment.BRAND_ADMIN_ID_INDEX}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ADMINS_TABLE} 
       - Effect: Allow
         Action:
           - dynamodb:GetItem
@@ -153,6 +213,10 @@ functions:
         Action:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEMS_TABLE}/index/${self:provider.environment.BRAND_ID_INDEX}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.BRAND_ADMINS_TABLE}/index/${self:provider.environment.BRAND_ADMIN_ADMIN_ID_INDEX}
       - Effect: Allow
         Action:
           - dynamodb:GetItem
@@ -301,15 +365,27 @@ resources:
         AttributeDefinitions:
           - AttributeName: brandId
             AttributeType: S
-          - AttributeName: brandAdminId
-            AttributeType: S
         KeySchema:
           - AttributeName: brandId
             KeyType: HASH
+
+    AdminsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.ADMINS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: adminId
+            AttributeType: S
+          - AttributeName: jwtSub
+            AttributeType: S
+        KeySchema:
+          - AttributeName: jwtSub
+            KeyType: HASH
         GlobalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.BRAND_ADMIN_ID_INDEX}
+          - IndexName: ${self:provider.environment.ADMIN_ID_INDEX}
             KeySchema:
-              - AttributeName: brandAdminId
+              - AttributeName: adminId
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
@@ -324,10 +400,10 @@ resources:
             AttributeType: S
           - AttributeName: brandId
             AttributeType: S
-          - AttributeName: jwtSub
+          - AttributeName: pairId
             AttributeType: S
         KeySchema:
-          - AttributeName: jwtSub
+          - AttributeName: pairId
             KeyType: HASH
         GlobalSecondaryIndexes:
           - IndexName: ${self:provider.environment.BRAND_ADMIN_BRAND_ID_INDEX}
@@ -338,10 +414,12 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
-          - IndexName: ${self:provider.environment.BRAND_ADMIN_ID_INDEX}
+          - IndexName: ${self:provider.environment.BRAND_ADMIN_ADMIN_ID_INDEX}
             KeySchema:
               - AttributeName: adminId
                 KeyType: HASH
+              - AttributeName: brandId
+                KeyType: RANGE
             Projection:
               ProjectionType: ALL
               
@@ -362,35 +440,6 @@ resources:
           - IndexName: ${self:provider.environment.OAUTH_ID_INDEX}
             KeySchema:
               - AttributeName: oauthId
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-
-    OAuthDynamoDBTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.OAUTH_TABLE}
-        AttributeDefinitions:
-          - AttributeName: memberId
-            AttributeType: S
-          - AttributeName: oauthId
-            AttributeType: S
-          - AttributeName: token
-            AttributeType: S
-        KeySchema:
-          - AttributeName: token
-            KeyType: HASH
-        GlobalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.OAUTH_ID_INDEX}
-            KeySchema:
-              - AttributeName: oauthId
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-          - IndexName: ${self:provider.environment.MEMBER_ID_INDEX}
-            KeySchema:
-              - AttributeName: memberId
                 KeyType: HASH
             Projection:
               ProjectionType: ALL

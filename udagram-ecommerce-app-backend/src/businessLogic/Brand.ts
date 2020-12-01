@@ -3,7 +3,9 @@ import * as uuid from 'uuid';
 import {brand} from '../resources/Brand';
 import {BrandDoc} from '../models/doc/BrandDoc';
 import {CreateBrandJson} from '../models/http/CreateBrandJson';
-import {getBrandIdByAdminId} from './BrandAdmin';
+import {BrandAdminDoc} from '../models/doc/BrandAdminDoc';
+import {getByAdminId} from './BrandAdmin';
+import { getAdminByJWTSub } from './Admin';
 
 export async function createBrand(createBrandJson:CreateBrandJson):Promise<BrandDoc>{
     const brandId = uuid.v4()
@@ -31,8 +33,20 @@ export async function updateBrand(brandDoc:BrandDoc):Promise<BrandDoc>{
 }
 
 export async function getBrandByAdminId(adminId:string):Promise<BrandDoc[]>{
-    const brandIds:string[] = await getBrandIdByAdminId(adminId);
-    const brandDocs:BrandDoc[] = await Promise.all(brandIds.map(async (brandId)=>(await getBrandById(brandId))));
-    //const brandDoc = await getBrandById(brandId);
+    const brandAdmins:BrandAdminDoc[] = await getByAdminId(adminId);
+    //const brandDocs:BrandDoc[] = await Promise.all(brandIds.map(async (brandId)=>(await getBrandById(brandId))));
+    const brandDocs:BrandDoc[] = await Promise.all(brandAdmins.map(async (brandAdmin)=>(await getBrandById(brandAdmin.brandId))));
     return brandDocs;
+}
+
+export async function getBrandsByJWTSub(jwtSub:string):Promise<BrandDoc[]>{
+    const adminId = (await getAdminByJWTSub(jwtSub)).adminId;
+    const brandAdmins:BrandAdminDoc[] = await getByAdminId(adminId);
+    //const brandDocs:BrandDoc[] = await Promise.all(brandIds.map(async (brandId)=>(await getBrandById(brandId))));
+    const brandDocs:BrandDoc[] = await Promise.all(brandAdmins.map(async (brandAdmin)=>(await getBrandById(brandAdmin.brandId))));
+    return brandDocs;
+}
+
+export async function patchBrand(brandDoc:BrandDoc):Promise<BrandDoc>{
+    return await brand.update(brandDoc);
 }

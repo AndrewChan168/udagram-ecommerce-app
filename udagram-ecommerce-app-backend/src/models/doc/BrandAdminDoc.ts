@@ -1,7 +1,5 @@
 export interface BrandAdminDoc{
-    jwtSub:string,
+    pairId:string,
     adminId:string,
     brandId:string,
-    adminName:string,
-    adminEmail:string,
 }

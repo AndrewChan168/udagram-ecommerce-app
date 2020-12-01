@@ -37,7 +37,7 @@ class Brand{
         await this.docClient.update({
             TableName:this.tableName,
             Key: {'brandId':brand.brandId},
-            UpdateExpression: "set brandName=:brandName and description=:description",
+            UpdateExpression: "set brandName=:brandName, description=:description",
             ExpressionAttributeValues: {
                 ':brandName':brand.brandName,
                 ':description':brand.description

@@ -1,36 +1,23 @@
 import 'source-map-support'
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import { getByBrandId } from './../../../businessLogic/BrandAdmin';
+import { BrandAdminDoc } from './../../../models/doc/BrandAdminDoc';
 //import { getSubject } from '../../../businessLogic/Auth'
 
 export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent):Promise<APIGatewayProxyResult>=>{
-    console.log(`handling ... event, `, event);
-    /** parameter on Header */
-    /*
-    const authHeader = event.headers.Authorization
-    console.log(`Authorization head: `, authHeader);
-    const jwtSub = await getSubject(authHeader);
-    console.log(`sub of decoded payload: ${jwtSub}`);
-    */
+    console.log(`handling getBrandAdminByBrandId event, `, event);
 
-    /** parameter on URL */
-    /*
-    const <parameter> = event.pathParameters.<parameterName>
-    */
-
-    /** parameter in body */
-    /*
-    const parseBody = JSON.parse(event.body)
-    */
+    const brandId = event.pathParameters.brandId;
 
     try{
-        
+        const brandAdmins:BrandAdminDoc[] = await getByBrandId(brandId);
         return {
             statusCode: 200,
             headers:{
                 'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
-
+                brandAdmins
             })
         }
     }catch(err){

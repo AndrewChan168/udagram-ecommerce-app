@@ -1,31 +1,26 @@
-import 'source-map-support';
-import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import 'source-map-support'
+import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 
-import { getSubject } from '../../../businessLogic/Auth';
-import { getBrandsByJWTSub } from '../../../businessLogic/Brand';
-import { BrandDoc } from '../../../models/doc/BrandDoc';
-
+import { getListOfItemsBriefByJWTSub } from '../../../businessLogic/Item';
+import { ResponseItemBriefJsons } from '../../../models/http/ResponseItemBriefJson';
+import { getSubject } from '../../../businessLogic/Auth'
 
 export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent):Promise<APIGatewayProxyResult>=>{
-    console.log(`handling getBrandsByAdmin event, `, event);
+    console.log(`handling getItemsByBrandAdmin event, `, event);
 
     const authHeader = event.headers.Authorization
     console.log(`Authorization head: `, authHeader);
     const jwtSub = await getSubject(authHeader);
     console.log(`sub of decoded payload: ${jwtSub}`);
 
-
     try{
-        const brands:BrandDoc[] = await getBrandsByJWTSub(jwtSub);
-        console.log(`getback brandDocs: `, brands);
+        const itemBriefJsons = await getListOfItemsBriefByJWTSub(jwtSub) as ResponseItemBriefJsons[];
         return {
             statusCode: 200,
             headers:{
                 'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify({
-                brands
-            })
+            body: JSON.stringify(itemBriefJsons)
         }
     }catch(err){
         return {
