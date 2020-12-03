@@ -6,6 +6,7 @@ const loadingImg =
 const Loading = () => (
   <div className="spinner">
     <img src={loadingImg} alt="Loading..." />
+    <h4>Loading...</h4>
   </div>
 );
 

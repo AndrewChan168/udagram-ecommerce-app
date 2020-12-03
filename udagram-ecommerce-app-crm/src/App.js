@@ -19,7 +19,7 @@ const App = () => {
 
   return(
     <div id='app' className='d-flex flex-column h-100'>
-      
+      <NavBar />
       <div>
         <Switch>
           <Route path="/" exact component={Home} />

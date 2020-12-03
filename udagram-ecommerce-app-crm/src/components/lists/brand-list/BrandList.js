@@ -17,10 +17,10 @@ const BrandList = (props)=>{
     const { brandList } = props;
 
     if (brandList.length===0){
-        return null
+        return <h4>You have no brand. Please click on create button to create your own brand! </h4>
     }else{
         return(
-            brandList.map((brand)=>(<Brand {...brand} key={brand.brandId} />))
+            brandList.map((brand)=>(<Brand {...brand} />))
         );
     }
 };

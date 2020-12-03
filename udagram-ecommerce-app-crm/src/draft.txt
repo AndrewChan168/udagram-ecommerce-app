@@ -1,0 +1,10 @@
+var axios = require('axios')
+const url = 'https://' + process.env.REACT_APP_API_ID + '.execute-api.us-east-1.amazonaws.com/dev/brand'
+const headers = {'Authorization':'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjNoN2Q5Q0ZUWEJzSmcwLXN4Qkk1eSJ9.eyJpc3MiOiJodHRwczovL2Rldi1ja2R4aDB6dC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDk0OTE3MzQ5NzI2OTU5NjQzNzkiLCJhdWQiOlsiaHR0cHM6Ly9leHByZXNzLnNhbXBsZSIsImh0dHBzOi8vZGV2LWNrZHhoMHp0LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2MDY5MjI1NDAsImV4cCI6MTYwNzAwODk0MCwiYXpwIjoiNXRtZHZzQnl4N1kwdmxldlZhSDJpaU41U01KNEt5S1QiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.KxryLGIlXPl9BUCm7u8V2or2WDnjMPpbERHxI4CdMvO1Js3gR5TuHEBGC2WJl20_mPBiuZ0m0PwXWW2oKPPTtvNYlWstTdpontXd5ZopTDfXuZzh3QhNqiinqtwdmH71jb8bm4EIkr2ca9nAGuMNTGcnOtzRTJBVwFm-gE_t4qOW2UtzteiE5TyKx8ntyVYI5dHYmnrZidFRK9PPtyDc4v0u8mjmIBjrzFX-lbjYbN-4ZaaTTrjIuiaam8H4_WOxoRD3eMcrD5pfb81EAfSSqzv_uV7rTlK7dkPaB1F1ZZ44dLPQJ8t7Ps4XMNiI1Mdi-FcDOQfhQY3VCy1QZOwSdw'}
+const newBrand = {"brandName":"Testing Brand 3","description":"The 3rd rand for testing"}
+const options = {method:'POST',headers,data:JSON.stringify(newBrand),url}
+axios(options).then(response=>console.log(response.data))
+
+const axiosInstance = axios.create({baseURL:url, headers:headers});
+
+axiosInstance.post(newBrand).then(response=>console.log(response.data)).catch(err=>console.log(err.message))

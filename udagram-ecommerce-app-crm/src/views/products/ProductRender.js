@@ -2,13 +2,22 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth0 } from "@auth0/auth0-react";
 
+import Loading from './../Loading';
 import {BrandItemsContext} from './../../contexts/BrandItemsContext';
 import BrandNameList from './../../components/lists/brand-list/BrandNameList';
 
+/*
+import fs from 'fs';
+const {REACT_APP_API_ID} = JSON.parse(fs.readFileSync('configure.json'));
+*/
+const REACT_APP_API_ID = "1lp4ikin0m";
+
 const ProductRender = ()=>{
-    const baseURL = `https://${process.env.REACT_APP_API_ID}.execute-api.us-east-1.amazonaws.com/dev`;
+    //const baseURL = `https://${process.env.REACT_APP_API_ID}.execute-api.us-east-1.amazonaws.com/dev`;
+    const baseURL = `https://${REACT_APP_API_ID}.execute-api.us-east-1.amazonaws.com/dev`;
     const [brandItems, setBrandItems] = useContext(BrandItemsContext);
     const [ isFetch, setIsFetch ] = useState(true);
+    const [ isLoading, setLoading ] = useState(true);
     const { getAccessTokenSilently } = useAuth0();
 
     useEffect(()=>{
@@ -17,6 +26,7 @@ const ProductRender = ()=>{
             await fetchItems();
         }
         fetchData();
+        //setLoading(false);
     }, [isFetch]);
 
     const genHeader = async()=>{
@@ -27,6 +37,7 @@ const ProductRender = ()=>{
     }
 
     const fetchItems = async ()=>{
+        setLoading(true);
         const headers = await genHeader();
         console.log(`header: `, headers)
         const axiosInstance = axios.create({
@@ -35,24 +46,15 @@ const ProductRender = ()=>{
         const result = await axiosInstance.get();
         console.log(`fetchItems result `, result.data)
         setBrandItems([...result.data]);
+        setLoading(false);
     }
 
-    const addItem = async (newItem, img)=>{
-        const header = genHeader();
-        const axiosInstance = axios.create({
-            baseURL:`${baseURL}/item`, header
-        });
-        const response = await axiosInstance.post(newItem);
-        const uploadPhotoUrl = response.uploadPhotoUrl;
-        const axios = new axios();
-        await axios.put(uploadPhotoUrl,img);
-
-        await fetchItems();
+    const onRefreshHandler = ()=>{
         setIsFetch(!isFetch);
     }
 
     return(
-        <BrandNameList itemBrandList={brandItems}/>
+        isLoading ? <Loading /> : <BrandNameList itemBrandList={brandItems} onRefreshHandler={onRefreshHandler} />
     );
 }
 
