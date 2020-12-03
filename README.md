@@ -1,1 +1,2 @@
 # udagram-ecommerce-app
+It is my capstone project of Udacity Cloud Developer Nanodegree Program. It is simulating the CMS part of a e-commerce platform in which everyone could create his/her own brand(s) and sell their products in this e-commerce platform.
