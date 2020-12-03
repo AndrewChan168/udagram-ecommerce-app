@@ -1,0 +1,595 @@
+{
+	"info": {
+		"_postman_id": "0516bb70-b63c-4103-8bd9-7d15ba35ac06",
+		"name": "udacity-cloud-serverless-ecommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "brand",
+			"item": [
+				{
+					"name": "create-brand",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brandName\":\"Testing Brand 3\",\r\n    \"description\":\"The 3rd rand for testing\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/brand",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"brand"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-a-brand",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/brand/70613456-695d-4eb7-b5f7-8e02208a4bec",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"brand",
+								"70613456-695d-4eb7-b5f7-8e02208a4bec"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-brands",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/allBrands",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"allBrands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-my-brands",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/myBrands",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"myBrands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch-a-brand",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brandName\":\"Testing Brand 1\",\r\n    \"description\":\"The 1st rand for testing\",\r\n    \"brandId\":\"70613456-695d-4eb7-b5f7-8e02208a4bec\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/brand",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"brand"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "item",
+			"item": [
+				{
+					"name": "create-a-item",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itemName\":\"Item-A\",\r\n    \"introduction\":\"Second Item to be uploaded\",\r\n    \"brandId\": \"c0c57211-d246-46e1-a13b-077739b7a4aa\",\r\n    \"price\":33.5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/item",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-a-item",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/item/abe376a1-004d-4ece-9491-4786662d27e9",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"item",
+								"abe376a1-004d-4ece-9491-4786662d27e9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch-a-item",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itemName\":\"Item-A\",\r\n    \"introduction\": \"First Item which was updated\",\r\n    \"price\":22.5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/item/abe376a1-004d-4ece-9491-4786662d27e9",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"item",
+								"abe376a1-004d-4ece-9491-4786662d27e9"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "brandAdmin",
+			"item": [
+				{
+					"name": "get-all-items-by-admin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/items/jwtSub",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"items",
+								"jwtSub"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "get-decoded-access-token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/decode",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"decode"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "itemImage",
+			"item": [
+				{
+					"name": "put-a-photo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "/C:/Users/User/Downloads/props-drilling.png"
+							},
+							"options": {
+								"file": {}
+							}
+						},
+						"url": {
+							"raw": "https://serverless-udagram-ecommerce-images-andrcha3-dev.s3.amazonaws.com/8c38984f-267f-441f-abc8-a7936cf0df5a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAVGJ2EZICXTKPBZVU%2F20201203%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201203T084208Z&X-Amz-Expires=600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDEaCXVzLWVhc3QtMSJGMEQCICwv5bSomjbqPO1VuHBd4ymeODnwqa4H4cSqYBv7QjkGAiAfwpyTBVU8aQrod95%2F4a2m4IbQuv3UTRHbl39EG1AoiyryAQi6%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAEaDDM1NzE0MTEwNTE1NyIMYpfSQPVCQt%2B0V7zIKsYBS%2FuYQNHUhmfna8zIHulEVP08enTfQLK6pBiaQ0LGHp4nD%2F0Szd7yMjCiekb9%2Bqim03KvX4DANysFEk5ua6YGbphyVXICqWtk6yK7JjpnXenLBoh2HsM6d3CuuiS4W3i1lhPtJ1eBZtQwYpj%2FwRT0g%2Bmp3KYYtImGKxj87xNyfPrpv4dc0yHHXuvNwq%2BjeP2uJtroxzneqQs0EL1hy7Fj7OsjM2SJ4On2RvqOrioqlhIzvyDJqnElSkUwPVChG0fjaFAgke%2BPMN7Jov4FOuEBlIHd9Q8LWyRcnMfCRz6%2FQAr7UenGAMPd5gff2nN37%2B2k6NIfb%2BSBcJSGBGFDEi63UvH4Nf4L4nLRFQToHo1RfGVgs%2FSV4yLnfMKoXC4FiS8s7QXT%2FSnGhlYJtlGYMAPCUh1k3zYfypjHwaSfYkdqu5WygcOEHtHbhXuFDG%2B49NL64sj4fKtVgsCAj8sTDs4xN9XAnwV2G3DsLzkOk5WYMnmOx5hzJsO3BV2iZ%2FdbMfUdAqRpEjn0AWId%2BYsW82FkGeojvM5n7Pb6quCsRocQQGQ754%2BNZ0Dl%2BRp1MNhaDc%2Fu&X-Amz-Signature=1e6cc8a0ec9f83178498562dabe09c1abaee3fff1c75aa5d812566cdc9754a9b&X-Amz-SignedHeaders=host",
+							"protocol": "https",
+							"host": [
+								"serverless-udagram-ecommerce-images-andrcha3-dev",
+								"s3",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"8c38984f-267f-441f-abc8-a7936cf0df5a"
+							],
+							"query": [
+								{
+									"key": "X-Amz-Algorithm",
+									"value": "AWS4-HMAC-SHA256"
+								},
+								{
+									"key": "X-Amz-Credential",
+									"value": "ASIAVGJ2EZICXTKPBZVU%2F20201203%2Fus-east-1%2Fs3%2Faws4_request"
+								},
+								{
+									"key": "X-Amz-Date",
+									"value": "20201203T084208Z"
+								},
+								{
+									"key": "X-Amz-Expires",
+									"value": "600"
+								},
+								{
+									"key": "X-Amz-Security-Token",
+									"value": "IQoJb3JpZ2luX2VjEDEaCXVzLWVhc3QtMSJGMEQCICwv5bSomjbqPO1VuHBd4ymeODnwqa4H4cSqYBv7QjkGAiAfwpyTBVU8aQrod95%2F4a2m4IbQuv3UTRHbl39EG1AoiyryAQi6%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAEaDDM1NzE0MTEwNTE1NyIMYpfSQPVCQt%2B0V7zIKsYBS%2FuYQNHUhmfna8zIHulEVP08enTfQLK6pBiaQ0LGHp4nD%2F0Szd7yMjCiekb9%2Bqim03KvX4DANysFEk5ua6YGbphyVXICqWtk6yK7JjpnXenLBoh2HsM6d3CuuiS4W3i1lhPtJ1eBZtQwYpj%2FwRT0g%2Bmp3KYYtImGKxj87xNyfPrpv4dc0yHHXuvNwq%2BjeP2uJtroxzneqQs0EL1hy7Fj7OsjM2SJ4On2RvqOrioqlhIzvyDJqnElSkUwPVChG0fjaFAgke%2BPMN7Jov4FOuEBlIHd9Q8LWyRcnMfCRz6%2FQAr7UenGAMPd5gff2nN37%2B2k6NIfb%2BSBcJSGBGFDEi63UvH4Nf4L4nLRFQToHo1RfGVgs%2FSV4yLnfMKoXC4FiS8s7QXT%2FSnGhlYJtlGYMAPCUh1k3zYfypjHwaSfYkdqu5WygcOEHtHbhXuFDG%2B49NL64sj4fKtVgsCAj8sTDs4xN9XAnwV2G3DsLzkOk5WYMnmOx5hzJsO3BV2iZ%2FdbMfUdAqRpEjn0AWId%2BYsW82FkGeojvM5n7Pb6quCsRocQQGQ754%2BNZ0Dl%2BRp1MNhaDc%2Fu"
+								},
+								{
+									"key": "X-Amz-Signature",
+									"value": "1e6cc8a0ec9f83178498562dabe09c1abaee3fff1c75aa5d812566cdc9754a9b"
+								},
+								{
+									"key": "X-Amz-SignedHeaders",
+									"value": "host"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch-imageDoc",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put-a-imageDoc",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itemId\":\"0cb54c47-ecd5-44e5-b2b7-c055b2158493\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/itemImage",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"itemImage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-a-image",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/itemImage/dff9355c-cb99-499c-a682-120040651b95",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"itemImage",
+								"dff9355c-cb99-499c-a682-120040651b95"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "post-admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"jwtSub\":\"google-oauth2|109491734972695964379\",\r\n    \"adminName\":\"andrcha3\",\r\n    \"adminEmail\":\"andrcha3@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/admin",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-admin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiid}}.execute-api.us-east-1.amazonaws.com/dev/admin",
+							"protocol": "https",
+							"host": [
+								"{{apiid}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"admin"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "Bearer {{accessToken}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "31657f46-1068-4484-b62b-670eb71c6c39",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "04945122-e6e8-4070-aa3b-39f7fc100ca9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "658478f7-0b08-4bae-963f-57d8fb9944a3",
+			"key": "apiid",
+			"value": ""
+		},
+		{
+			"id": "72efe520-6444-4a32-87ff-9773b4341371",
+			"key": "accessToken",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}
