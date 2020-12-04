@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
 
 import CreateAdminButton from './../../components/buttons/CreateAdminButton';
+import { AdminContext } from './../../contexts/AdminContext';
 
 const REACT_APP_API_ID = "1lp4ikin0m";
 
 const Profile = ()=>{
     const baseURL = `https://${REACT_APP_API_ID}.execute-api.us-east-1.amazonaws.com/dev`;
+    const setAdminId = useContext(AdminContext)[1];
     const { user,getAccessTokenSilently } = useAuth0();
     const { nickname, name, picture, email, sub } = user;
     const [buttonShowed, setButtonShowed] = useState(false);
 
-    //useEffect(()=>console.log(`Your sub: `, sub), [sub]);
     useEffect(()=>{
         checkAdmin();
     }, [user]);
@@ -31,10 +32,10 @@ const Profile = ()=>{
         });
         const result = await axiosInstance.get();
         console.log(`fetchItems admin `, result.data);
-        //JSON.stringify(obj) === JSON.stringify({})
         if (JSON.stringify(result.data) !== JSON.stringify({})){
             console.log(`setButtonShowed(false)`);
             setButtonShowed(false);
+            setAdminId(result.data.admin.adminId);
         }else{
             console.log(`setButtonShowed(true)`);
             setButtonShowed(true);
@@ -57,6 +58,7 @@ const Profile = ()=>{
         console.log(`created admin`);
         console.log(response.data);
         setButtonShowed(false);
+        setAdminId(response.data.admin.adminId);
     }
 
     const onClick = async()=>{
@@ -74,7 +76,8 @@ const Profile = ()=>{
                     {`your sub: ${sub}`}<br />
                 </p>
             </div>
-            {buttonShowed ? <div className="card-footer"><CreateAdminButton onClickHandler={onClick}/></div> : null}
+            {buttonShowed ? <div className="card-footer"><CreateAdminButton onClickHandler={onClick}/></div> 
+            : <h5>You have already registered as Admin</h5>}
         </div>
     );
 };

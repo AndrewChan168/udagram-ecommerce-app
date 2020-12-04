@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 import Loading from './../Loading';
 import {BrandItemsContext} from './../../contexts/BrandItemsContext';
+import { AdminContext } from './../../contexts/AdminContext';
 import BrandNameList from './../../components/lists/brand-list/BrandNameList';
 
 /*
@@ -16,6 +17,7 @@ const ProductRender = ()=>{
     //const baseURL = `https://${process.env.REACT_APP_API_ID}.execute-api.us-east-1.amazonaws.com/dev`;
     const baseURL = `https://${REACT_APP_API_ID}.execute-api.us-east-1.amazonaws.com/dev`;
     const [brandItems, setBrandItems] = useContext(BrandItemsContext);
+    const adminId = useContext(AdminContext)[0];
     const [ isFetch, setIsFetch ] = useState(true);
     const [ isLoading, setLoading ] = useState(true);
     const { getAccessTokenSilently } = useAuth0();
@@ -54,7 +56,8 @@ const ProductRender = ()=>{
     }
 
     return(
-        isLoading ? <Loading /> : <BrandNameList itemBrandList={brandItems} onRefreshHandler={onRefreshHandler} />
+        (adminId==="") ? <h5>You are not yet register as an admin. Please go to Profile page to register as an admin.</h5> 
+        : (isLoading ? <Loading /> : <BrandNameList itemBrandList={brandItems} onRefreshHandler={onRefreshHandler} />)
     );
 }
 

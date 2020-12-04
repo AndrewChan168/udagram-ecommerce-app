@@ -114,6 +114,22 @@ const ItemModal = (props)=>{
                                     onChange={(event)=>setPrice(parseFloat(event.target.value))}
                                 />
                             </div>
+                        </form>
+                    </div>
+                    <div className="form-group">
+                        <div className="modal-footer">
+                            <button className="btn btn-primary" data-dismiss="modal" onClick={clickSubmitHandler}>Submit</button>
+                            <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default ItemModal;
+/*
                             <div className="form-group">
                                 <div class="custom-file">
                                     <input 
@@ -132,18 +148,4 @@ const ItemModal = (props)=>{
                                     </label>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div className="form-group">
-                        <div className="modal-footer">
-                            <button className="btn btn-primary" data-dismiss="modal" onClick={clickSubmitHandler}>Submit</button>
-                            <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export default ItemModal;
+*/

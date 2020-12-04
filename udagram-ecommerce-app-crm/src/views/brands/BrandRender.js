@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 import Loading from './../Loading';
 import BrandModal from './../../components/modals/BrandModal'
+import { AdminContext } from './../../contexts/AdminContext';
 import {BrandsContext} from './../../contexts/BrandsContext'
 import BrandList from '../../components/lists/brand-list/BrandList';
 
@@ -17,6 +18,7 @@ const  BrandRender = ()=>{
     //const baseURL = `https://${process.env.REACT_APP_API_ID}.execute-api.us-east-1.amazonaws.com/dev`;
     const baseURL = `https://${REACT_APP_API_ID}.execute-api.us-east-1.amazonaws.com/dev`;
     const [ brands,setBrands ] = useContext(BrandsContext);
+    const adminId = useContext(AdminContext)[0];
     const [ isFetch, setIsFetch ] = useState(true);
     const [ isLoading, setLoading ] = useState(true);
     const { getAccessTokenSilently } = useAuth0();
@@ -83,7 +85,8 @@ const  BrandRender = ()=>{
     }
 
     return(
-        <div>
+        (adminId==="") ? <h5>You are not yet register as an admin. Please go to Profile page to register as an admin.</h5>
+        : (<div>
             <div className="jumbotron jumbotron-fluid">
                 <div className="container">
                     <h3 className="display-6">Your Own Brands</h3>
@@ -95,7 +98,7 @@ const  BrandRender = ()=>{
                 </div>
             </div>
             {isLoading ? <Loading /> : <BrandList brandList={brands}/>}
-        </div>
+        </div>)
     );
 };
 
