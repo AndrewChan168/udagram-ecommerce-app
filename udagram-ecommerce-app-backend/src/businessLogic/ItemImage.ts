@@ -7,6 +7,7 @@ import {CreateItemImageJson} from '../models/http/CreateItemImageJson';
 import {ResponseItemImageJson} from '../models/http/ResponseItemImageJson';
 
 export async function createItemImageDoc(createItemImageJson:CreateItemImageJson):Promise<ResponseItemImageJson>{
+    console.log(`inside businessLogic/ItemImage/createItemImageDoc(), createItemImageJson:`, createItemImageJson);
     const imageId = uuid.v4();
     const putItemImageDoc:ImageDoc = {
         ...createItemImageJson,
@@ -14,6 +15,7 @@ export async function createItemImageDoc(createItemImageJson:CreateItemImageJson
         photoUrl:`https://${itemImage.getImageBucketName()}.s3.amazonaws.com/${imageId}`,
         thumbnailUrl:`https://${itemImage.getThumbnailBucketName()}.s3.amazonaws.com/${imageId}`
     }
+    console.log(`inside businessLogic/ItemImage/createItemImageDoc(), putItemImageDoc:`, putItemImageDoc);
     const uploadUrl = await itemImage.create(putItemImageDoc);
     const responseItemImageDoc:ResponseItemImageJson = {
         ...putItemImageDoc,

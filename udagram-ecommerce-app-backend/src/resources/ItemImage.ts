@@ -25,6 +25,7 @@ class ItemImage{
     }
 
     async create(itemImageDoc:ImageDoc):Promise<string>{
+        console.log(`inside resources/ItemImage.create(itemImageDoc), itemImageDoc:`, itemImageDoc);
         await this.createDoc(itemImageDoc);
         return this.getUploadUrl(itemImageDoc.imageId);
     }
@@ -81,7 +82,7 @@ class ItemImage{
                 ':itemId':itemId
             }
         }).promise()
-
+        console.log(`inside resource/ItemImage.getDocsByItemId(), result.Items:`, result.Items);
         return result.Items as ImageDoc[];
     }
 

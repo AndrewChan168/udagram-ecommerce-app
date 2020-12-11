@@ -10,6 +10,7 @@ export const handler:APIGatewayProxyHandler = async(event: APIGatewayProxyEvent)
 
     const parseBody = JSON.parse(event.body)
     const createItemImageJson:CreateItemImageJson = parseBody
+    console.log(`inside lambda/http/itemImage/postImage, createItemImageJson:`, createItemImageJson);
 
     try{
         const responseItemImageJson:ResponseItemImageJson = await createItemImageDoc(createItemImageJson)

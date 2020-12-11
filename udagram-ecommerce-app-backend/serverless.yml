@@ -295,6 +295,19 @@ functions:
           path: item/{itemId}
           cors: true
 
+  getImageDocs:
+    handler: src/lambda/http/itemImage/getImageDocs.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEM_IMAGES_TABLE}/index/${self:provider.environment.ITEM_ID_INDEX} 
+    events:
+      - http:
+          method: get
+          path: itemImages/{itemId}
+          cors: true
+
   postImage:
     handler: src/lambda/http/itemImage/postImage.handler 
     iamRoleStatements:
@@ -454,8 +467,6 @@ resources:
             AttributeType: S
           - AttributeName: imageId
             AttributeType: S
-          - AttributeName: createDatetime
-            AttributeType: S
         KeySchema:
           - AttributeName: imageId
             KeyType: HASH
@@ -464,8 +475,6 @@ resources:
             KeySchema:
               - AttributeName: itemId
                 KeyType: HASH
-              - AttributeName: createDatetime
-                KeyType: RANGE
             Projection:
               ProjectionType: ALL
 
