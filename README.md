@@ -29,7 +29,7 @@ npm run start
 ```
 
 ## User story of the application
-Please imagine you are going to 
+Please imagine you are going to create a brand on this platform. You first click on `Log In with OAuth` button to login with OAuth server. Then you go to `Profile` page and click on `Register as Admin` button. After that, you go to `Brands` page and click on `Create your new brand` button. Finally, you go to `Products` page.
 
 ## Backend part 
 The backend part is a serverless application which is hosted on AWS. Data of the application is stored in DynamoDB and file uploaded from client is stored in S3 bucket.
