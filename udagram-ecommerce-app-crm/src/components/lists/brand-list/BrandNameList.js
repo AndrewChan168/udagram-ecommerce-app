@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
+import { BrandItemsContext } from './../../../contexts/BrandItemsContext';
 import ProductList from './../product-list/ProductList';
-import ItemModal from './../../modals/ItemModal';
+import ItemModal from './../../modals/ItemModals/ItemModal';
 import ArrowDownSquare from './../../../assets/img/arrow-down-square.svg';
 import ArrowUpSquare from './../../../assets/img/arrow-up-square.svg';
 
 const BrandName = (props)=>{
-    const { brand, items, onRefreshHandler } = props;
+    const { brand, items } = props;
     const [isShow, setIsShow] = useState(false);
+    const { isCreate, setIsCreate,setBrandId } = useContext(BrandItemsContext);
+
+    const onCreateButtonClick = ()=>{
+        setBrandId(brand.brandId);
+        setIsCreate(!isCreate);
+    }
 
     return(
         <div className="card" key={brand.brandId}>
@@ -25,21 +32,21 @@ const BrandName = (props)=>{
                         <img src={isShow ? ArrowUpSquare : ArrowDownSquare} alt="" width="24" height="24" title="Bootstrap"></img>
                         {isShow ? <p>Shrink</p> : <p>Show Items</p>}
                     </button>
-                    <button className="btn btn-outline-secondary" data-toggle="modal" data-target="#brand-modal">
+                    <button className="btn btn-outline-secondary" data-toggle="modal" data-target="#brand-modal" onClick={onCreateButtonClick}>
                         Create a new item
                     </button>
-                    <ItemModal brandId={brand.brandId} onRefreshHandler={onRefreshHandler} />
+                    <ItemModal />
                 </h2>
             </div>
             <div id={`collaspse-${brand.brandId}`} className="collapse" aria-labelledby={brand.brandId} data-parent="#accordionBrandItems">
-                <ProductList items={items}/>
+                <ProductList items={items} brand={brand} />
             </div>
         </div>
     );
 }
 
 const BrandNameList = (props)=>{
-    const { itemBrandList, onRefreshHandler } = props;
+    const { itemBrandList } = props;
 
     /*
     useEffect(()=>{
@@ -57,8 +64,7 @@ const BrandNameList = (props)=>{
                         <BrandName 
                             brand={itemBrand.brand} 
                             items={itemBrand.items} 
-                            key={itemBrand.brand.brandId} 
-                            onRefreshHandler={onRefreshHandler}
+                            key={itemBrand.brand.brandId}
                         />
                     )})}
             </div>

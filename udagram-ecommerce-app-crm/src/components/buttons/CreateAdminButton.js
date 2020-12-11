@@ -8,7 +8,7 @@ const CreateAdminButton = (props)=>{
             className="btn btn-primary btn-block"
             onClick={()=>onClickHandler()}
         >
-            Create as Admin
+            Register as Admin
         </button>
     );
 }
