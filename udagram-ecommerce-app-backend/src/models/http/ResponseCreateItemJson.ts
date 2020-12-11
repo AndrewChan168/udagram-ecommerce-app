@@ -4,5 +4,5 @@ export interface ResponseCreateItemJson {
     introduction: string,
     brandId: string,
     price:number,
-    uploadPhotoUrl:string
+    uploadPhotoUrl?:string
 }

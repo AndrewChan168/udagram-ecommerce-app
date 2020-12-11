@@ -21,15 +21,15 @@ const StarsReducer = (accumlator, currentDoc) =>  accumlator + parseInt(currentD
 
 export async function createItem(createItemJson:CreateItemJson):Promise<ResponseCreateItemJson>{
     const itemId = uuid.v4();
-    const createItemImageJson:CreateItemImageJson = {itemId,createDatetime:moment().format()};
-    const itemImageDoc:ResponseItemImageJson = await createItemImageDoc(createItemImageJson);
-    console.log(`In businessLogic/createItem() function after createItemImageDoc():`, itemImageDoc);
+    //const createItemImageJson:CreateItemImageJson = {itemId,createDatetime:moment().format()};
+    //const itemImageDoc:ResponseItemImageJson = await createItemImageDoc(createItemImageJson);
+    //console.log(`In businessLogic/createItem() function after createItemImageDoc():`, itemImageDoc);
     const putItemDoc = {
         ...createItemJson,
         comments:[],
         stars:0,
         itemId,
-        windowImageId:itemImageDoc.imageId,
+        //windowImageId:itemImageDoc.imageId,
     } as ItemDoc;
     await item.create(putItemDoc);
     const responseCreateItemJson:ResponseCreateItemJson ={
@@ -38,7 +38,7 @@ export async function createItem(createItemJson:CreateItemJson):Promise<Response
         introduction:putItemDoc.introduction,
         brandId:putItemDoc.brandId,
         price:putItemDoc.price,
-        uploadPhotoUrl:itemImageDoc.uploadUrl,
+        //uploadPhotoUrl:itemImageDoc.uploadUrl,
     }
     console.log(`In businessLogic/createItem() function after item.create():`, responseCreateItemJson);
     return responseCreateItemJson;
@@ -90,26 +90,31 @@ export async function getItemDetail(itemId:string):Promise<ResponseItemDetailJso
 
 export async function getListOfItemsBrief(brandId:string):Promise<ResponseItemBriefJson[]>{
     const itemDocs:ItemDoc[] = await item.getItemsByBrandId(brandId);
+    console.log(`inside businessLogic/Item/getListOfItemsBrief(), itemDocs:`, itemDocs);
     const responseItemBriefJsons = await Promise.all(itemDocs.map(async (itemDoc)=>({
             itemId:itemDoc.itemId,
             itemName:itemDoc.itemName,
             stars:(itemDoc.comments.length===0) ? 0 : itemDoc.comments.reduce(StarsReducer, 0)/itemDoc.comments.length,
             price:itemDoc.price,
-            thumbnailUrl:(await getImageDocByImageId(itemDoc.windowImageId)).thumbnailUrl,
+            //thumbnailUrl:(await getImageDocByImageId(itemDoc.windowImageId)).thumbnailUrl,
         })
     ));
+    console.log(`inside businessLogic/Item/getListOfItemsBrief(), responseItemBriefJsons:`, responseItemBriefJsons);
     return responseItemBriefJsons as ResponseItemBriefJson[];
 }
 
 
 export async function getListOfItemsBriefByJWTSub(jwtSub:string):Promise<ResponseItemBriefJsons[]>{
+    console.log(`inside businessLogic/Item/getListOfItemsBriefByJWTSub, jwtSub:`, jwtSub);
     const adminDoc = await getAdminByJWTSub(jwtSub);
+    console.log(`inside businessLogic/Item/getListOfItemsBriefByJWTSub, adminDoc:`, adminDoc);
     const brandDocs = await getBrandByAdminId(adminDoc.adminId);
+    console.log(`inside businessLogic/Item/getListOfItemsBriefByJWTSub, brandDocs:`, brandDocs);
     const itemBriefJsons = await Promise.all(brandDocs.map(async (brandDoc)=>({
         brand:await getBrandById(brandDoc.brandId),
         items:await getListOfItemsBrief(brandDoc.brandId)
     }))) 
-    
+    console.log(`inside businessLogic/Item/getListOfItemsBriefByJWTSub, itemBriefJsons:`, itemBriefJsons)
     return itemBriefJsons.map(itemBriefJson=>({
         brand:{brandId:itemBriefJson.brand.brandId, brandName:itemBriefJson.brand.brandName},
         items:itemBriefJson.items as ResponseItemBriefJson[]

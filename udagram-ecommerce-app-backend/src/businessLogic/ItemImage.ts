@@ -25,8 +25,9 @@ export async function createItemImageDoc(createItemImageJson:CreateItemImageJson
 }
 
 export async function getImageDocByImageId(imageId:string):Promise<ImageDoc>{
-    return await itemImage.getDocByImageId(imageId);
-
+    const imageDoc = await itemImage.getDocByImageId(imageId);
+    console.log(`inside businessLogic/ItemImage/getImageDocByImageId(), imageDoc:`, imageDoc);
+    return imageDoc;
 }
 
 export async function getImageDocsByItemId(itemId:string):Promise<ImageDoc[]>{

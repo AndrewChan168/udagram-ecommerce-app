@@ -21,6 +21,7 @@ export async function createBrand(createBrandJson:CreateBrandJson):Promise<Brand
 
 export async function getBrandById(brandId:string):Promise<BrandDoc>{
     const brandDoc = await brand.getByBrandId(brandId);
+    console.log(`inside businessLogic/Brand/getBrandById(), brandDoc:`, brandDoc);
     return brandDoc;
 }
 
